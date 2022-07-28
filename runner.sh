@@ -2,7 +2,8 @@
 
 python manage.py migrate
 
-gunicorn --bind :8000 -k gevent \
+gunicorn --bind :"$PORT" \
+         -k gevent \
          --timeout 30 \
          --graceful-timeout 30 \
          --workers 5 \
