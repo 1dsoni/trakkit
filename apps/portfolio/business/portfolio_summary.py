@@ -2,6 +2,7 @@ import logging
 
 from django.db import transaction
 
+from apps.portfolio.constants import TradeStatus, TradeType
 from apps.portfolio.models import Portfolio
 from apps.portfolio.models import PortfolioSummary
 
@@ -31,10 +32,9 @@ def get_portfolio_tickers_summary(portfolio: Portfolio, tickers: list) -> dict:
 
     # fetch amounts and quantities
     ticker_amount_volume_map = {}
-    for trade in portfolio.trades.filter(ticker__in=tickers):
-        if trade.status != 'success':
-            continue
-
+    for trade in portfolio.trades.filter(ticker__in=tickers,
+                                         status=TradeStatus.success,
+                                         trade_type=TradeType.BUY):
         if trade.ticker in ticker_amount_volume_map:
             ticker_amount_volume_map[trade.ticker].append((trade.amount, trade.volume))
         else:
@@ -58,16 +58,16 @@ def fetch_portfolio_ticker_summary_obj(user_id, portfolio, ticker):
     )
 
     if is_created:
-        logger.info('created portfolio_summary_obj: %s', portfolio_summary_obj)
+        logger.debug('created portfolio_summary_obj: %s', portfolio_summary_obj)
 
     return portfolio_summary_obj
 
 
 def update_portfolio_ticker_summary(ticker, portfolio_summary_obj):
-    logger.info('update summary for ticker: %s', ticker)
+    logger.debug('update summary for ticker: %s', ticker)
 
     with transaction.atomic():
-        logger.info('try take lock and fetch portfolio_summary_obj: %s', portfolio_summary_obj)
+        logger.debug('try take lock and fetch portfolio_summary_obj: %s', portfolio_summary_obj)
 
         portfolio_summary_obj = PortfolioSummary.objects.filter(
             id=portfolio_summary_obj.id
@@ -75,13 +75,13 @@ def update_portfolio_ticker_summary(ticker, portfolio_summary_obj):
             nowait=False
         ).get()
 
-        logger.info('success take lock and fetch portfolio_summary_obj: %s', portfolio_summary_obj)
+        logger.debug('success take lock and fetch portfolio_summary_obj: %s', portfolio_summary_obj)
 
         portfolio = portfolio_summary_obj.portfolio
 
         summary = get_portfolio_tickers_summary(portfolio=portfolio, tickers=[ticker])
 
-        logger.info('got new ticker summary: %s', summary)
+        logger.debug('got new ticker summary: %s', summary)
 
         ticker_summary = summary.get(ticker)
         if not ticker_summary:
@@ -99,10 +99,10 @@ def update_portfolio_ticker_summary(ticker, portfolio_summary_obj):
 
 
 def recalculate_portfolio_ticker_summary(portfolio: Portfolio):
-    logger.info('recalculate summary for portfolio: %s', portfolio)
+    logger.debug('recalculate summary for portfolio: %s', portfolio)
 
     with transaction.atomic():
-        logger.info('try take lock and fetch portfolio: %s', portfolio)
+        logger.debug('try lock on portfolio: %s', portfolio)
 
         portfolio = Portfolio.objects.filter(
             id=portfolio.id
@@ -110,18 +110,11 @@ def recalculate_portfolio_ticker_summary(portfolio: Portfolio):
             nowait=False
         ).get()
 
-        tickers = []
+        logger.debug('got lock')
+
+        user_id = portfolio.user_id
         for item in portfolio.trades.all().values('ticker').distinct():
-            tickers.append(item.get('ticker'))
-
-        if not tickers:
-            return
-
-        summaries = get_portfolio_tickers_summary(portfolio=portfolio, tickers=tickers)
-
-        for k, v in summaries.items():
-            ticker = k
-            user_id = portfolio.user_id
+            ticker = item.get('ticker')
 
             with transaction.atomic():
                 portfolio_ticker_summary_obj = fetch_portfolio_ticker_summary_obj(

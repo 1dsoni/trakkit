@@ -6,6 +6,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
 from commons.viewsets import BaseApiViewSet
+from .business.cumulative_returns import fetch_portfolio_ticker_cumulative_returns
 from .business.portfolio_summary import recalculate_portfolio_ticker_summary
 from .models import Portfolio
 from .models import PortfolioSummary
@@ -18,9 +19,7 @@ class PortfolioViewSet(BaseApiViewSet,
                        mixins.RetrieveModelMixin,
                        mixins.CreateModelMixin,
                        mixins.UpdateModelMixin):
-    queryset = Portfolio.objects.all().prefetch_related(
-        Prefetch('summary', queryset=PortfolioSummary.objects.all()),
-    )
+    queryset = Portfolio.objects.all()
 
     lookup_field = 'id'
 
@@ -33,6 +32,16 @@ class PortfolioViewSet(BaseApiViewSet,
         portfolio = self.get_object()
         portfolio = recalculate_portfolio_ticker_summary(portfolio)
         return Response(self.get_serializer(portfolio).data)
+
+    @action(methods=['GET'], detail=True, url_path="cumulative-returns")
+    def fetch_cumulative_returns(self, request, *args, **kwargs):
+        portfolio = self.get_object()
+        return_value = fetch_portfolio_ticker_cumulative_returns(portfolio)
+        return Response(
+            {
+                'return_value': return_value
+            }
+        )
 
 
 class PortfolioSummaryViewSet(BaseApiViewSet,
