@@ -22,6 +22,10 @@ def custom_exception_handler(exc, context):
         error_code = getattr(exc, 'error_code', undef_error)
         api_message = getattr(exc, 'api_message', '')
         extra = getattr(exc, 'extra', None)
+    else:
+        status_code = 400
+        error_code = undef_error
+        api_message = getattr(exc, 'message', str(exc))
 
     return response(
         data={},

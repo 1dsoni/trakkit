@@ -11,6 +11,8 @@ class BaseApiViewSet(GenericViewSet):
     permission_classes = (AllowAny,)
     pagination_class = CustomPageNumberPagination
 
+    lookup_field = "ref_id"
+
     def perform_authentication(self, request):
         # dont need native django authentication
         return
