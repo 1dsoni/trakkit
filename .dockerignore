@@ -1,0 +1,38 @@
+### pycharm ###
+.idea/
+
+### Django ###
+*.log
+*.pot
+*.pyc
+**/__pycache__
+db.sqlite3
+db.sqlite3-journal
+media
+static
+
+### Django.Python Stack ###
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+### Environments
+# .env
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# operating system-related files
+# file properties cache/storage on macOS
+*.DS_Store
+
+### project specific
+Dockerfile
+.dockerignore
+README.md
+.gitignore
