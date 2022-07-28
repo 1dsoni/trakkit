@@ -53,6 +53,7 @@ class BaseSettings(object):
 
     INSTALLED_APPS = [
         'apps.trade.apps.TradeConfig',
+        'apps.portfolio.apps.PortfolioConfig',
     ]
 
     MIDDLEWARE = [
