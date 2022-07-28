@@ -15,7 +15,7 @@ class PortfolioSummarySerializer(CustomModelSerializer):
 class PortfolioSerializer(CustomModelSerializer):
     class Meta:
         model = Portfolio
-        fields = ('ref_id',
+        fields = ('id',
                   'user_id',
                   'name',
                   'created_at',

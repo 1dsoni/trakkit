@@ -22,6 +22,8 @@ class PortfolioViewSet(BaseApiViewSet,
         Prefetch('summary', queryset=PortfolioSummary.objects.all()),
     )
 
+    lookup_field = 'id'
+
     serializer_class = PortfolioSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ('user_id', 'name')
@@ -34,8 +36,7 @@ class PortfolioViewSet(BaseApiViewSet,
 
 
 class PortfolioSummaryViewSet(BaseApiViewSet,
-                              mixins.ListModelMixin,
-                              mixins.RetrieveModelMixin):
+                              mixins.ListModelMixin):
     queryset = PortfolioSummary.objects.all()
 
     serializer_class = PortfolioSummarySerializer
