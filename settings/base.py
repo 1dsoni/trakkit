@@ -52,6 +52,7 @@ class BaseSettings(object):
     BASE_DIR = Path(__file__).resolve().parent.parent
 
     INSTALLED_APPS = [
+        'apps.trade.apps.TradeConfig',
     ]
 
     MIDDLEWARE = [
