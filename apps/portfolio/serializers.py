@@ -1,5 +1,15 @@
 from commons.serializers import CustomModelSerializer
 from .models import Portfolio
+from .models import PortfolioSummary
+
+
+class PortfolioSummarySerializer(CustomModelSerializer):
+    class Meta:
+        model = PortfolioSummary
+        fields = ('ticker',
+                  'average_amount',
+                  'volume',
+                  'updated_at')
 
 
 class PortfolioSerializer(CustomModelSerializer):

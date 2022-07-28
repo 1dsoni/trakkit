@@ -7,7 +7,7 @@ class TradeSerializer(CustomModelSerializer):
         model = Trade
         fields = ('ref_id',
                   'user_id',
-                  'portfolio_id',
+                  'portfolio',
                   'trade_type',
                   'security_type',
                   'ticker',

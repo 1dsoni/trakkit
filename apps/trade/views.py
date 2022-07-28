@@ -12,7 +12,8 @@ class TradeViewSet(BaseApiViewSet,
                    mixins.RetrieveModelMixin,
                    mixins.CreateModelMixin,
                    mixins.UpdateModelMixin):
-    queryset = Trade.objects.all()
+    queryset = Trade.objects.all().select_related('portfolio')
+
     serializer_class = TradeSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ('user_id',
