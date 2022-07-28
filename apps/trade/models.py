@@ -4,9 +4,9 @@ from commons.db.models import MyModel
 
 
 class Trade(MyModel):
-    user_id = models.CharField(max_length=255)
-    portfolio_id = models.CharField(max_length=255)
-    trade_type = models.PositiveSmallIntegerField()  # B=1/ S=1
+    user_id = models.CharField(max_length=255, blank=False, null=False)
+    portfolio_id = models.CharField(max_length=255, blank=False, null=False)
+    trade_type = models.PositiveSmallIntegerField(null=False)  # B=1/ S=1
     security_type = models.CharField(max_length=255)
     ticker = models.CharField(max_length=255)
     volume = models.PositiveIntegerField()
