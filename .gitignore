@@ -133,3 +133,5 @@ dmypy.json
 
 # env files
 local.env
+
+static
