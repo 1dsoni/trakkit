@@ -1,7 +1,11 @@
 # trakkit 
-Portfolio tracker
+##Portfolio tracker
+A simple django app hosted on heroku that demonstrates storage of user trades and the updating of the portfolio trade summary in an atomic transaction under a row level db lock to prevent race conditions while updating the portfolio summary
 
-    keeps track of the trades in the portfolio
+## Additional improvements
+    - Add more test cases
+    - Implement live ticker buy value using redis as the storage and updating redis via crons
+    - Modify the service as a platform for managing portfolio tracking requirements of different clients
 
 ### api docs can be found at: https://trackit-pro.herokuapp.com/docs/
 
