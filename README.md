@@ -3,4 +3,4 @@ Portfolio tracker
 
     keeps track of the trades in the portfolio
 
-### REST api hosted at: https://trackit-pro.herokuapp.com/
+### api docs can be found at: https://trackit-pro.herokuapp.com/docs/
