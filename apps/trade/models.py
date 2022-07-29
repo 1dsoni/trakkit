@@ -1,7 +1,9 @@
 from django.db import models, transaction
+from rest_framework.exceptions import ValidationError
 
-from apps.portfolio.business.portfolio_summary import update_portfolio_ticker_summary, \
-    fetch_portfolio_ticker_summary_obj
+from apps.portfolio.business.portfolio_summary import fetch_portfolio_ticker_summary_obj
+from apps.portfolio.business.portfolio_summary import update_portfolio_ticker_summary
+from apps.portfolio.constants import TradeType, SecurityType, TradeStatus
 from apps.portfolio.models import Portfolio
 from commons.db.models import MyModel
 
@@ -31,6 +33,21 @@ class Trade(MyModel):
         ]
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if not self.volume:
+            raise ValidationError(f"volume {self.volume} is not valid")
+
+        if not self.amount or float(str(self.amount)) <= 0:
+            raise ValidationError(f"amount {self.amount} is not valid")
+
+        if self.trade_type not in {TradeType.BUY, TradeType.SELL}:
+            raise ValidationError(f"trade_type {self.trade_type} is not valid")
+
+        if self.security_type not in {SecurityType.stock}:
+            raise ValidationError(f"security_type {self.security_type} is not valid")
+
+        if self.status not in {TradeStatus.success, TradeStatus.failed}:
+            raise ValidationError(f"status {self.status} is not valid")
+
         with transaction.atomic():
             super().save(force_insert=force_insert,
                          force_update=force_update,

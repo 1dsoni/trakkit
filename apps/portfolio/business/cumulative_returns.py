@@ -15,8 +15,8 @@ def fetch_portfolio_ticker_cumulative_returns(portfolio: Portfolio):
                                             volume__gt=0):
         average_amount = summary.average_amount
         volume = summary.volume
-
         ticker = summary.ticker
+
         live_ticker_buy_value = get_live_ticker_buy_value(ticker)
 
         return_value += (live_ticker_buy_value - average_amount) * volume

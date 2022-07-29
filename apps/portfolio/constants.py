@@ -6,3 +6,7 @@ class TradeStatus:
 class TradeType:
     BUY = 1
     SELL = 2
+
+
+class SecurityType:
+    stock = "stock"

@@ -1,4 +1,4 @@
-from django.db.models import Prefetch
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.decorators import action
@@ -46,7 +46,12 @@ class PortfolioViewSet(BaseApiViewSet,
 
 class PortfolioSummaryViewSet(BaseApiViewSet,
                               mixins.ListModelMixin):
-    queryset = PortfolioSummary.objects.all()
+    queryset = PortfolioSummary.objects.exclude(
+        Q(average_amount__isnull=True)
+        | Q(volume__isnull=True)
+        | Q(average_amount__lte=0)
+        | Q(volume__lte=0)
+    )
 
     serializer_class = PortfolioSummarySerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)

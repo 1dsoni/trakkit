@@ -27,6 +27,21 @@ def get_weighted_average(amounts):
 
 
 def get_portfolio_tickers_summary(portfolio: Portfolio, tickers: list) -> dict:
+    """
+    given a list of tickers and a portfolio calculate their weighted average
+
+    1. fetch all the trades which are:
+        BUY, success and contains tickers from the list of tickers in params
+    2. calculate their weighted average
+    3. return a map of tickers with their calculated avg amount and volume
+
+    Params:
+        portfolio: Portfolio
+        tickers: list of ticker symbol eg: [TCS, WIPRO]
+
+    Returns:
+        portfolio summary object: PortfolioSummary
+    """
     if not tickers:
         tickers = []
 
@@ -51,6 +66,13 @@ def get_portfolio_tickers_summary(portfolio: Portfolio, tickers: list) -> dict:
 
 
 def fetch_portfolio_ticker_summary_obj(user_id, portfolio, ticker):
+    """
+    fetch or create new portfolio_summary_obj
+    using this to always have a row to take a lock on when updating the portfolio_summary on any trade
+
+    Returns:
+        portfolio summary object: PortfolioSummary
+    """
     portfolio_summary_obj, is_created = PortfolioSummary.objects.get_or_create(
         user_id=user_id,
         portfolio=portfolio,
@@ -64,18 +86,32 @@ def fetch_portfolio_ticker_summary_obj(user_id, portfolio, ticker):
 
 
 def update_portfolio_ticker_summary(ticker, portfolio_summary_obj):
+    """
+    given a ticker and a portfolio try to recalculate the summary and update in db
+
+    1. takes lock on the portfolio summary row corresponding to the ticker to avoid race conditions on concurrent trades
+    2. attempts to perform concurrent updates on a (user, portfolio, ticker) will throw error; this is to be handled at client
+    3. calculates the weighted average for the given ticker and updates in db
+
+    Params:
+        ticker: ticker symbol eg: TCS
+        portfolio_summary_obj: PortfolioSummary
+
+    Returns:
+        portfolio summary object: PortfolioSummary
+    """
     logger.debug('update summary for ticker: %s', ticker)
 
     with transaction.atomic():
-        logger.debug('try take lock and fetch portfolio_summary_obj: %s', portfolio_summary_obj)
+        logger.debug('try take lock on fetch portfolio_summary_obj: %s', portfolio_summary_obj)
 
         portfolio_summary_obj = PortfolioSummary.objects.filter(
             id=portfolio_summary_obj.id
         ).select_for_update(
-            nowait=False
+            nowait=True
         ).get()
 
-        logger.debug('success take lock and fetch portfolio_summary_obj: %s', portfolio_summary_obj)
+        logger.debug('success take lock on fetch portfolio_summary_obj: %s', portfolio_summary_obj)
 
         portfolio = portfolio_summary_obj.portfolio
 
@@ -99,6 +135,11 @@ def update_portfolio_ticker_summary(ticker, portfolio_summary_obj):
 
 
 def recalculate_portfolio_ticker_summary(portfolio: Portfolio):
+    """
+    given a portfolio try to recalculate the summary of all tickers
+     - to be used for testing
+     - ideally on every trade the summary gets updated as a single transaction (atomic operation)
+    """
     logger.debug('recalculate summary for portfolio: %s', portfolio)
 
     with transaction.atomic():
@@ -110,7 +151,7 @@ def recalculate_portfolio_ticker_summary(portfolio: Portfolio):
             nowait=False
         ).get()
 
-        logger.debug('got lock')
+        logger.debug('got lock on portfolio: %s', portfolio)
 
         user_id = portfolio.user_id
         for item in portfolio.trades.all().values('ticker').distinct():
