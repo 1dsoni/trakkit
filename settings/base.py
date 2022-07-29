@@ -52,6 +52,14 @@ class BaseSettings(object):
     BASE_DIR = Path(__file__).resolve().parent.parent
 
     INSTALLED_APPS = [
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+
+        'drf_yasg',  # documentation
+
         'apps.trade.apps.TradeConfig',
         'apps.portfolio.apps.PortfolioConfig',
     ]
@@ -79,6 +87,22 @@ class BaseSettings(object):
     USE_L10N = True
 
     USE_TZ = True
+
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ]
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
