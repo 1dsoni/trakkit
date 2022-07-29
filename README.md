@@ -1,5 +1,5 @@
 # trakkit 
-##Portfolio tracker
+## Portfolio tracker
 A simple django app hosted on heroku that demonstrates storage of user trades and the updating of the portfolio trade summary in an atomic transaction under a row level db lock to prevent race conditions while updating the portfolio summary
 
 ## Additional improvements
