@@ -6,6 +6,18 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  PYTHONUNBUFFERED: 1
+  DJANGO_SETTINGS_MODULE: settings.local
+  PORT: 8000
+  SECRET_KEY: SECRET_KEY;
+  DB_NAME: ***REMOVED***;
+  DB_USER: ***REMOVED***;
+  DB_PASSWORD: ***REMOVED***;
+  DB_PORT: 3306;
+  DB_HOST: ***REMOVED***;
+  ALLOWED_HOSTS: "*"
+
 jobs:
   build:
 
