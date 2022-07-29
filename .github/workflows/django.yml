@@ -10,12 +10,12 @@ env:
   PYTHONUNBUFFERED: 1
   DJANGO_SETTINGS_MODULE: settings.local
   PORT: 8000
-  SECRET_KEY: SECRET_KEY;
-  DB_NAME: ***REMOVED***;
-  DB_USER: ***REMOVED***;
-  DB_PASSWORD: ***REMOVED***;
-  DB_PORT: 3306;
-  DB_HOST: ***REMOVED***;
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_PORT: ${{ secrets.DB_PORT }}
+  DB_HOST: ${{ secrets.DB_HOST }}
   ALLOWED_HOSTS: "*"
 
 jobs:
