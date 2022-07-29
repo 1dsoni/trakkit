@@ -10,6 +10,7 @@ from .business.cumulative_returns import fetch_portfolio_ticker_cumulative_retur
 from .business.portfolio_summary import recalculate_portfolio_ticker_summary
 from .models import Portfolio
 from .models import PortfolioSummary
+from .serializers import PortfolioCreateSerializer
 from .serializers import PortfolioSerializer
 from .serializers import PortfolioSummarySerializer
 
@@ -26,6 +27,14 @@ class PortfolioViewSet(BaseApiViewSet,
     serializer_class = PortfolioSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ('user_id', 'name')
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+
+        if self.request.method == 'POST':
+            serializer_class = PortfolioCreateSerializer
+
+        return serializer_class
 
     @action(methods=['POST'], detail=True, url_path="recalculate-summary")
     def recalculate_summary(self, request, *args, **kwargs):

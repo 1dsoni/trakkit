@@ -32,7 +32,8 @@ class Trade(MyModel):
                                  'is_deleted'])
         ]
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def clean(self):
+        super().clean()
         if not self.volume:
             raise ValidationError(f"volume {self.volume} is not valid")
 
@@ -48,6 +49,7 @@ class Trade(MyModel):
         if self.status not in {TradeStatus.success, TradeStatus.failed}:
             raise ValidationError(f"status {self.status} is not valid")
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         with transaction.atomic():
             super().save(force_insert=force_insert,
                          force_update=force_update,

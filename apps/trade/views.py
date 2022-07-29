@@ -4,6 +4,7 @@ from rest_framework.filters import OrderingFilter
 
 from commons.viewsets import BaseApiViewSet
 from .models import Trade
+from .serializers import TradeCreateSerializer
 from .serializers import TradeSerializer
 
 
@@ -21,3 +22,11 @@ class TradeViewSet(BaseApiViewSet,
                         'ticker',
                         'trade_type',
                         'status')
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+
+        if self.request.method == 'POST':
+            serializer_class = TradeCreateSerializer
+
+        return serializer_class
