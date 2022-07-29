@@ -109,3 +109,14 @@ Portfolio tracker
             }
         ]
     }
+
+
+### Fetch portfolio returns
+    
+    Request
+    curl --location --request GET 'https://trackit-pro.herokuapp.com/api/v1/portfolio/1/cumulative-returns/'
+    
+    Response:
+    {
+        "return_value": -15000.0
+    }
