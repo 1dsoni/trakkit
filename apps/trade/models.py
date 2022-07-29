@@ -60,7 +60,5 @@ class Trade(MyModel):
                 portfolio=self.portfolio,
                 ticker=self.ticker
             )
-            transaction.on_commit(
-                lambda: update_portfolio_ticker_summary(ticker=self.ticker,
-                                                        portfolio_summary_obj=portfolio_ticker_summary_obj)
-            )
+            update_portfolio_ticker_summary(ticker=self.ticker,
+                                            portfolio_summary_obj=portfolio_ticker_summary_obj)

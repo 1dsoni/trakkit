@@ -121,12 +121,13 @@ def update_portfolio_ticker_summary(ticker, portfolio_summary_obj):
 
         ticker_summary = summary.get(ticker)
         if not ticker_summary:
-            return
+            average_amount = None
+            volume = None
+        else:
+            average_amount = ticker_summary.get('amount')
+            volume = ticker_summary.get('volume')
 
-        average_amount = ticker_summary.get('amount')
-        volume = ticker_summary.get('volume')
-
-        portfolio_summary_obj.average_amount = average_amount or 0
+        portfolio_summary_obj.average_amount = average_amount
         portfolio_summary_obj.volume = volume
 
         portfolio_summary_obj.save(update_fields=['average_amount', 'volume', 'updated_at'])
