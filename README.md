@@ -2,15 +2,6 @@
 ## Portfolio tracker
 A simple django app hosted on heroku that demonstrates storage of user trades and the updating of the portfolio trade summary in an atomic transaction under a row level db lock to prevent race conditions while updating the portfolio summary
 
-## System design
-```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
-
 ## Additional improvements
     - Add more test cases
     - Implement live ticker buy value using redis as the storage and updating redis via crons
