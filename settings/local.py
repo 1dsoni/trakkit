@@ -1,4 +1,5 @@
 import os
+import sys
 
 from constants import LOCAL_ENV
 from .base import BaseSettings
@@ -40,6 +41,12 @@ class LocalSettings(BaseSettings):
             }
         }
     }
+
+    if 'test' in sys.argv:
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'testing_db'
+        }
 
 
 LocalSettings.load_settings(__name__)

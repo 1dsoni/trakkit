@@ -4,12 +4,16 @@ Django==4.0.6
 django-db-connection-pool==1.2.1
 django-filter==22.1
 djangorestframework==3.13.1
+factory-boy==3.2.1
+Faker==13.15.1
 gevent==21.12.0
 greenlet==1.1.2
 gunicorn==20.1.0
 mysqlclient==2.1.1
+python-dateutil==2.8.2
 python-json-logger==2.0.4
 pytz==2022.1
+six==1.16.0
 SQLAlchemy==1.4.39
 sqlparse==0.4.2
 zope.event==4.5.0
